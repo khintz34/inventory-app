@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1 Item: #{title}
+
+  p #[strong Category:]
+     a(href=item.category.url) #{item.category}
+  p #[strong Description:] #{item.description}
+  p #[strong Price:] #{item.price}
+
+  div(style='margin-left:20px;margin-top:20px')
+    h4 Available Inventory
+
+    each val in item_instances
+      hr
+      p #[strong Location:]
+        a(href=val.url) #{val.location}
+
+    else
+      p This product is not in stock right now
+
+  hr
+  p
+    a(href=item.url+'/delete') Delete Item
+  p
+    a(href=item.url+'/update') Update Item
+    

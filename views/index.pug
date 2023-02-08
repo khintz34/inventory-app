@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= title
+
+
+  if error
+    p Error getting dynamic content.
+  else
+    p Current Inventory:
+
+    ul
+      li #[strong Items:] !{data.item_count}
+      li #[strong Locations:] !{data.location_count}
+      li #[strong Categories:] !{data.category_count}
+      li #[strong Item Instances:] !{data.item_instance_count}

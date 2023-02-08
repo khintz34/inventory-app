@@ -1,0 +1,18 @@
+extends layout
+
+block content
+
+  h1 Category: #{title}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Categories
+
+    dl
+      each cat in category_items
+        dt
+          a(href=cat.url) #{cat.name}
+        dd #{cat.description}
+
+      else
+        p This Category has no items
