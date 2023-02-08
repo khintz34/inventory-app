@@ -1,6 +1,8 @@
 const async = require("async");
 const Location = require("../models/location");
 const { body, validationResult } = require("express-validator");
+const Item = require("../models/item");
+const item_instance = require("../models/item_instance");
 
 // Display list of all locations.
 exports.location_list = (req, res) => {
@@ -19,8 +21,39 @@ exports.location_list = (req, res) => {
 };
 
 // Display detail page for a specific location.
-exports.location_detail = (req, res) => {
-  res.send(`NOT IMPLEMENTED: location detail: ${req.params.id}`);
+exports.location_detail = (req, res, next) => {
+  async.parallel(
+    {
+      location(callback) {
+        Location.findById(req.params.id).exec(callback);
+      },
+
+      location_items(callback) {
+        item_instance
+          .find({ location: req.params.id })
+          .populate("item")
+          .sort({ item: 1 })
+          .exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.location == null) {
+        // No results.
+        const err = new Error("location not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render
+      res.render("location_detail", {
+        title: results.location.name,
+        location: results.location,
+        location_items: results.location_items,
+      });
+    }
+  );
 };
 
 // Display location create form on GET.

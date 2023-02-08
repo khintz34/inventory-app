@@ -53,7 +53,10 @@ exports.item_detail = (req, res, next) => {
         Item.findById(req.params.id).populate("category").exec(callback);
       },
       item_instance(callback) {
-        ItemInstance.find({ item: req.params.id }).exec(callback);
+        ItemInstance.find({ item: req.params.id })
+          .populate("item")
+          .populate("location")
+          .exec(callback);
       },
     },
     (err, results) => {
@@ -71,7 +74,7 @@ exports.item_detail = (req, res, next) => {
       res.render("item_detail", {
         title: results.item.name,
         item: results.item,
-        item_instances: results.item_instances,
+        item_instances: results.item_instance,
       });
     }
   );

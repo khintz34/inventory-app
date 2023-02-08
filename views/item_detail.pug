@@ -3,8 +3,8 @@ extends layout
 block content
   h1 Item: #{title}
 
-  p #[strong Category:]
-     a(href=item.category.url) #{item.category}
+  p #[strong Category: ]
+     a(href=item.category.url) #{item.category.name}
   p #[strong Description:] #{item.description}
   p #[strong Price:] #{item.price}
 
@@ -13,8 +13,8 @@ block content
 
     each val in item_instances
       hr
-      p #[strong Location:]
-        a(href=val.url) #{val.location}
+      p #[strong Location: ]
+        a(href=val.url) #{val.location.name}
 
     else
       p This product is not in stock right now

@@ -1,0 +1,18 @@
+extends layout
+
+block content
+
+  h1 Location: #{title}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Items
+
+    dl
+      each val in location_items
+        dt
+          a(href=val.url) #{val.item.name} -- $#{val.item.price}
+        dd #{val.description}
+
+      else
+        p This Location has no items

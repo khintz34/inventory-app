@@ -7,10 +7,10 @@ const CategorySchema = new Schema({
   description: { type: String, required: true, minLength: 1, maxLength: 50 },
 });
 
-// Virtual for book's URL
+// Virtual for category's URL
 CategorySchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `/category/${this._id}`;
+  return `/catalog/category/${this._id}`;
 });
 
 // Export model

@@ -9,10 +9,10 @@ const ItemSchema = new Schema({
   price: { type: Number, required: true },
 });
 
-// Virtual for book's URL
+// Virtual for item's URL
 ItemSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `/item/${this._id}`;
+  return `/catalog/item/${this._id}`;
 });
 
 // Export model
