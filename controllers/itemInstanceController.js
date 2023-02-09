@@ -18,8 +18,27 @@ exports.iteminstance_list = (req, res, next) => {
 };
 
 // Display detail page for a specific itemInstance.
-exports.iteminstance_detail = (req, res) => {
-  res.send(`NOT IMPLEMENTED: itemInstance detail: ${req.params.id}`);
+exports.iteminstance_detail = (req, res, next) => {
+  ItemInstance.findById(req.params.id)
+    .populate("item")
+    .populate("location")
+    .exec(function (err, iteminstance) {
+      if (err) {
+        return next(err);
+      }
+
+      if (iteminstance == null) {
+        // No results.
+        const err = new Error("item instance not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render
+      res.render("iteminstance_detail", {
+        title: "Item Instance List",
+        iteminstance: iteminstance,
+      });
+    });
 };
 
 // Display itemInstance create form on GET.
