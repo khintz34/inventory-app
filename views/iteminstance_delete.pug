@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1 #{title}: #{iteminstance._id}
+
+  div(style='margin-left:20px;margin-top:20px')
+    h4 Item Instance Details:  
+    h3 Item: #{iteminstance.item.name}
+    h3 Location: #{iteminstance.location.name} 
+    
+    form(method='POST' action='')
+      div.form-group
+        input#iteminstanceid.form-control(type='hidden',name='iteminstanceid', required='true', value=iteminstance._id )
+
+      button.btn.btn-primary(type='submit') Delete

@@ -81,23 +81,176 @@ exports.item_detail = (req, res, next) => {
 };
 
 // Display item create form on GET.
-exports.item_create_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: item create GET");
+exports.item_create_get = (req, res, next) => {
+  // Get all locations and categories, which we can use for adding to our item.
+  async.parallel(
+    {
+      categories(callback) {
+        Category.find(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      res.render("item_form", {
+        title: "Create Item",
+        categories: results.categories,
+      });
+    }
+  );
 };
 
 // Handle item create on POST.
-exports.item_create_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: item create POST");
-};
+exports.item_create_post = [
+  // Convert the category to an array.
+  (req, res, next) => {
+    if (!Array.isArray(req.body.category)) {
+      req.body.category =
+        typeof req.body.category === "undefined" ? [] : [req.body.category];
+    }
+    next();
+  },
+
+  // Validate and sanitize fields.
+  body("name", "Name must not be empty.").trim().isLength({ min: 1 }).escape(),
+  body("description", "Description must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category", "Category must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("price", "Price must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .isNumeric()
+    .escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a item object with escaped and trimmed data.
+    const item = new Item({
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      // Get all authors and genres for form.
+      async.parallel(
+        {
+          categories(callback) {
+            Category.find(callback);
+          },
+        },
+        (err, results) => {
+          if (err) {
+            return next(err);
+          }
+
+          // Mark our selected genres as checked.
+          for (const category of results.categories) {
+            if (item.category.includes(category._id)) {
+              category.checked = "true";
+            }
+          }
+          res.render("item_form", {
+            title: "Create Item",
+            categories: results.authors,
+            item,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    }
+
+    // Data from form is valid. Save item.
+    item.save((err) => {
+      if (err) {
+        return next(err);
+      }
+      // Successful: redirect to new item record.
+      res.redirect(item.url);
+    });
+  },
+];
 
 // Display item delete form on GET.
-exports.item_delete_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: item delete GET");
+exports.item_delete_get = (req, res, next) => {
+  async.parallel(
+    {
+      item(callback) {
+        Item.findById(req.params.id).exec(callback);
+      },
+      item_instances(callback) {
+        ItemInstance.find({ item: req.params.id })
+          .populate("item")
+          .populate("location")
+          .exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.item == null) {
+        // No results.
+        res.redirect("/catalog/items");
+      }
+      // Successful, so render.
+      res.render("item_delete", {
+        title: "Delete item",
+        item: results.item,
+        item_instances: results.item_instances,
+      });
+    }
+  );
 };
 
 // Handle item delete on POST.
-exports.item_delete_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: item delete POST");
+exports.item_delete_post = (req, res, next) => {
+  async.parallel(
+    {
+      item(callback) {
+        Item.findById(req.body.itemid).exec(callback);
+      },
+      item_instances(callback) {
+        ItemInstance.find({ item: req.body.itemid }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      // Success
+      if (results.items_instances.length > 0) {
+        // item has items. Render in same way as for GET route.
+        res.render("item_delete", {
+          title: "Delete item",
+          item: results.item,
+          item_items: results.items_items,
+        });
+        return;
+      }
+      // item has no items. Delete object and redirect to the list of items.
+      Item.findByIdAndRemove(req.body.itemid, (err) => {
+        if (err) {
+          return next(err);
+        }
+        // Success - go to item list
+        res.redirect("/catalog/items");
+      });
+    }
+  );
 };
 
 // Display item update form on GET.

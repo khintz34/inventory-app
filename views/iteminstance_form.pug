@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1=title
+  form(method='POST' action='')
+    div.form-group
+      label(for='item') Item:
+      select#item.form-control(type='select' placeholder='Select item' name='item' required='true')
+        - item_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+        for item in item_list
+          option(value=item._id, selected=(selected_item==item._id.toString() ? 'selected' : false) ) #{item.name}
+
+    div.form-group
+    label(for='location') Location:
+      select#location.form-control(type='select' placeholder='Select Location' name='location' required='true')
+        - location_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+        for location in location_list
+          option(value=location._id, selected=(selected_location==location._id.toString() ? 'selected' : false) ) #{location.name}
+    br
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

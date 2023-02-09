@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1 #{title}: #{item.name}
+  p= item.lifespan
+
+  if item_instances.length > 0
+
+    p #[strong Delete the following item instances before attempting to delete this item.]
+
+    div(style='margin-left:20px;margin-top:20px')
+
+      h4 Items
+
+      dl
+      each item in item_instances
+        dt
+          a(href=item.url) #{item.item.name} (#{item.location.name})
+
+  else
+    p Do you really want to delete this item?
+
+    form(method='POST' action='')
+      div.form-group
+        input#itemid.form-control(type='hidden',name='itemid', required='true', value=item._id )
+
+      button.btn.btn-primary(type='submit') Delete

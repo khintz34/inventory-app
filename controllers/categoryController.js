@@ -3,7 +3,7 @@ const Category = require("../models/category");
 const Item = require("../models/item");
 const { body, validationResult } = require("express-validator");
 
-// Display list of all categorys.
+// Display list of all categories.
 exports.category_list = (req, res) => {
   Category.find()
     .sort([["name", "ascending"]])
@@ -51,24 +51,123 @@ exports.category_detail = (req, res, next) => {
   );
 };
 
-// Display category create form on GET.
+// Display Category create form on GET.
 exports.category_create_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: category create GET");
+  res.render("category_form", { title: "Create Category" });
 };
 
-// Handle category create on POST.
-exports.category_create_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: category create POST");
-};
+// Handle Category create on POST.
+exports.category_create_post = [
+  // Validate and sanitize fields.
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("name must be specified.")
+    .isAlpha("en-US", { ignore: " " })
+    .withMessage("Name has non-alphanumeric characters."),
+  body("description")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Description must be specified.")
+    .isAlpha("en-US", { ignore: " " })
+    .withMessage("Description has non-alphanumeric characters."),
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/errors messages.
+      res.render("category_form", {
+        title: "Create Category",
+        category: req.body,
+        errors: errors.array(),
+      });
+      return;
+    }
+    // Data from form is valid.
+
+    // Create an Category object with escaped and trimmed data.
+    const category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+    });
+    category.save((err) => {
+      if (err) {
+        return next(err);
+      }
+      // Successful - redirect to new category record.
+      res.redirect(category.url);
+    });
+  },
+];
 
 // Display category delete form on GET.
-exports.category_delete_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: category delete GET");
+exports.category_delete_get = (req, res, next) => {
+  async.parallel(
+    {
+      category(callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+      categories_items(callback) {
+        Item.find({ category: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.category == null) {
+        // No results.
+        res.redirect("/catalog/categories");
+      }
+      // Successful, so render.
+      res.render("category_delete", {
+        title: "Delete Category",
+        category: results.category,
+        category_items: results.categories_items,
+      });
+    }
+  );
 };
 
 // Handle category delete on POST.
-exports.category_delete_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: category delete POST");
+exports.category_delete_post = (req, res, next) => {
+  async.parallel(
+    {
+      category(callback) {
+        Category.findById(req.body.categoryid).exec(callback);
+      },
+      categories_items(callback) {
+        Item.find({ category: req.body.categoryid }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      // Success
+      if (results.categories_items.length > 0) {
+        // category has items. Render in same way as for GET route.
+        res.render("category_delete", {
+          title: "Delete category",
+          category: results.category,
+          category_items: results.categories_items,
+        });
+        return;
+      }
+      // category has no items. Delete object and redirect to the list of categories.
+      Category.findByIdAndRemove(req.body.categoryid, (err) => {
+        if (err) {
+          return next(err);
+        }
+        // Success - go to category list
+        res.redirect("/catalog/categories");
+      });
+    }
+  );
 };
 
 // Display category update form on GET.
