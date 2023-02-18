@@ -5,7 +5,7 @@ const Item = require("../models/item");
 const item_instance = require("../models/item_instance");
 
 // Display list of all locations.
-exports.location_list = (req, res) => {
+exports.location_list = (req, res, next) => {
   Location.find()
     .sort([["name", "ascending"]])
     .exec(function (err, list_locations) {
@@ -177,11 +177,69 @@ exports.location_delete_post = (req, res, next) => {
 };
 
 // Display location update form on GET.
-exports.location_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: location update GET");
+exports.location_update_get = (req, res, next) => {
+  Location.findById(req.params.id, function (err, location) {
+    if (err) {
+      return next(err);
+    }
+    if (location == null) {
+      // No results.
+      const err = new Error("location not found");
+      err.status = 404;
+      return next(err);
+    }
+    // Success.
+    res.render("location_form", {
+      title: "Update location",
+      location: location,
+    });
+  });
 };
 
 // Handle location update on POST.
-exports.location_update_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: location update POST");
-};
+exports.location_update_post = [
+  // Validate and santize fields.
+  body("name")
+    .trim()
+    .isLength({ min: 1, max: 30 })
+    .escape()
+    .withMessage("location must be specified.")
+    .isAlpha("en-US", { ignore: " " })
+    .withMessage("location has non-alphanumeric characters."),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create location object with escaped and trimmed data (and the old id!)
+    var location = new Location({
+      name: req.body.name,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitized values and error messages.
+      res.render("location_form", {
+        title: "Update location",
+        location: location,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      // Data from form is valid. Update the record.
+      Location.findByIdAndUpdate(
+        req.params.id,
+        location,
+        {},
+        function (err, thelocation) {
+          if (err) {
+            return next(err);
+          }
+          // Successful - redirect to genre detail page.
+          res.redirect(thelocation.url);
+        }
+      );
+    }
+  },
+];

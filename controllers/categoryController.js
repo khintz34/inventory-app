@@ -4,7 +4,7 @@ const Item = require("../models/item");
 const { body, validationResult } = require("express-validator");
 
 // Display list of all categories.
-exports.category_list = (req, res) => {
+exports.category_list = (req, res, next) => {
   Category.find()
     .sort([["name", "ascending"]])
     .exec(function (err, list_categories) {
@@ -171,11 +171,77 @@ exports.category_delete_post = (req, res, next) => {
 };
 
 // Display category update form on GET.
-exports.category_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: category update GET");
+exports.category_update_get = (req, res, next) => {
+  Category.findById(req.params.id, function (err, category) {
+    if (err) {
+      return next(err);
+    }
+    if (category == null) {
+      // No results.
+      const err = new Error("Category not found");
+      err.status = 404;
+      return next(err);
+    }
+    // Success.
+    res.render("category_form", {
+      title: "Update category",
+      category: category,
+    });
+  });
 };
 
 // Handle category update on POST.
-exports.category_update_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: category update POST");
-};
+exports.category_update_post = [
+  // Validate and santize fields.
+  body("name")
+    .trim()
+    .isLength({ min: 1, max: 30 })
+    .escape()
+    .withMessage("Category must be specified.")
+    .isAlphanumeric()
+    .withMessage("Category has non-alphanumeric characters."),
+  body("description")
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .escape()
+    .withMessage("Description must be specified.")
+    .isAlpha("en-US", { ignore: " " })
+    .withMessage("Category has non-alphanumeric characters."),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create category object with escaped and trimmed data (and the old id!)
+    var category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitized values and error messages.
+      res.render("category_form", {
+        title: "Update category",
+        category: category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      // Data from form is valid. Update the record.
+      Category.findByIdAndUpdate(
+        req.params.id,
+        category,
+        {},
+        function (err, thecategory) {
+          if (err) {
+            return next(err);
+          }
+          // Successful - redirect to genre detail page.
+          res.redirect(thecategory.url);
+        }
+      );
+    }
+  },
+];
