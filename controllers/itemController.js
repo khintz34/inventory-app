@@ -93,6 +93,7 @@ exports.item_create_get = (req, res, next) => {
       if (err) {
         return next(err);
       }
+      // console.log(results.categories);
       res.render("item_form", {
         title: "Create Item",
         categories: results.categories,
@@ -144,7 +145,7 @@ exports.item_create_post = [
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
 
-      // Get all categorys and genres for form.
+      // Get all categories and genres for form.
       async.parallel(
         {
           categories(callback) {
@@ -162,6 +163,7 @@ exports.item_create_post = [
               category.checked = "true";
             }
           }
+          console.log(results.categories);
           res.render("item_form", {
             title: "Create Item",
             categories: results.categories,
@@ -255,7 +257,7 @@ exports.item_delete_post = (req, res, next) => {
 
 // Display item update form on GET.
 exports.item_update_get = (req, res, next) => {
-  // Get item, categorys and genres for form.
+  // Get item, categories and genres for form.
   async.parallel(
     {
       item(callback) {
@@ -277,16 +279,15 @@ exports.item_update_get = (req, res, next) => {
       }
       // Success.
       // Allow for category list.
-      // for (const category of results.categories) {
-      //   for (const itemCategory of results.item.category) {
-      //     if (category._id.toString() === itemCategory._id.toString()) {
-      //       category.checked = "true";
-      //     }
-      //   }
-      // }
+      for (const category of results.categories) {
+        let itemCategory = results.item.category;
+        if (category._id.toString() === itemCategory._id.toString()) {
+          category.checked = "true";
+        }
+      }
       res.render("item_form", {
         title: "Update item",
-        categorys: results.categorys,
+        categories: results.categories,
         item: results.item,
       });
     }
@@ -332,7 +333,7 @@ exports.item_update_post = [
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
 
-      // Get all categorys and genres for form.
+      // Get all categories and genres for form.
       async.parallel(
         {
           categories(callback) {
@@ -343,9 +344,9 @@ exports.item_update_post = [
           if (err) {
             return next(err);
           }
-          // ! cannot read properties of undefined (length)
-          // Mark our selected categorues as checked.
+          // Mark our selected categories as checked.
           for (const category of results.categories) {
+            console.log(category);
             if (item.category.includes(category._id)) {
               category.checked = "true";
             }

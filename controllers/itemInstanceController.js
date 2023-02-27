@@ -201,11 +201,107 @@ exports.iteminstance_delete_post = (req, res, next) => {
 };
 
 // Display itemInstance update form on GET.
-exports.iteminstance_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: itemInstance update GET");
+exports.iteminstance_update_get = (req, res, next) => {
+  async.parallel(
+    {
+      item(callback) {
+        Item.find({}, "name").populate("name").exec(callback);
+      },
+      location(callback) {
+        Location.find({}, "name").populate("name").exec(callback);
+      },
+      iteminstance: function (callback) {
+        ItemInstance.findById(req.params.id)
+          .populate("item")
+          .populate("location")
+          .exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        console.log(results);
+        return next(err);
+      }
+      if (results.item == null) {
+        // No results.
+        const err = new Error("Item not found");
+        err.status = 404;
+        return next(err);
+      }
+      for (const location of results.location) {
+        let itemLocation = results.iteminstance.location;
+        if (location._id.toString() === itemLocation._id.toString()) {
+          location.checked = "true";
+          // console.log(itemLocation + "here");
+        }
+      }
+      // Successful, so render.
+      // console.log(results.iteminstance);
+      console.log(results.iteminstance.location.name);
+      console.log(results.iteminstance.item.name);
+      res.render("iteminstance_form", {
+        title: "Update Item Instance",
+        item_list: results.item,
+        location_list: results.location,
+        selected_location: results.iteminstance.location._id,
+        selected_item: results.iteminstance.item._id,
+      });
+    }
+  );
 };
 
-// Handle iteminstance update on POST.
-exports.iteminstance_update_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: itemInstance update POST");
-};
+// Handle itemInstance update on POST.
+exports.iteminstance_update_post = [
+  // Validate and sanitize fields.
+  body("item", "item must be specified").trim().isLength({ min: 1 }).escape(),
+  body("location", "Location must be specified")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    console.log(req.body.location);
+    // Create a itemInstance object with escaped/trimmed data and current id.
+    var iteminstance = new ItemInstance({
+      item: req.body.item,
+      location: req.body.location,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors so render the form again, passing sanitized values and errors.
+      Item.find({}, "name").exec(function (err, items) {
+        if (err) {
+          return next(err);
+        }
+        // Successful, so render.
+        res.render("iteminstance_form", {
+          title: "Update itemInstance",
+          item_list: items,
+          selected_item: iteminstance.item._id,
+          errors: errors.array(),
+          iteminstance: iteminstance,
+        });
+      });
+      return;
+    } else {
+      // Data from form is valid.
+      ItemInstance.findByIdAndUpdate(
+        req.params.id,
+        iteminstance,
+        {},
+        function (err, theiteminstance) {
+          if (err) {
+            return next(err);
+          }
+          // Successful - redirect to detail page.
+          res.redirect(theiteminstance.url);
+        }
+      );
+    }
+  },
+];
