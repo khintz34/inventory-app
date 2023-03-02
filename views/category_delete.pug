@@ -1,28 +1,33 @@
 extends layout
 
 block content
-  h1 #{title}: #{category.name}
-  p= category.lifespan
+  div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  if category_items.length > 0
+    div.detail-main  
+      h1 #{title}: #{category.name}
+      p= category.lifespan
 
-    p #[strong Delete the following item instances before attempting to delete this category.]
+      if category_items.length > 0
 
-    div(style='margin-left:20px;margin-top:20px')
+        p #[strong Delete the following item instances before attempting to delete this category.]
 
-      h4 Items
+        div(style='margin-left:20px;margin-top:20px')
 
-      dl
-      each item in category_items
-        dt
-          //- a(href=item.url) #{item.item.name} (#{item.item._id})
-          p #{item.name}
+          h4 Items
 
-  else
-    p Do you really want to delete this category?
+          dl
+          each item in category_items
+            dt
+              //- a(href=item.url) #{item.item.name} (#{item.item._id})
+              p #{item.name}
 
-    form(method='POST' action='')
-      div.form-group
-        input#categoryid.form-control(type='hidden',name='categoryid', required='true', value=category._id )
+      else
+        p Do you really want to delete this category?
 
-      button.btn.btn-primary(type='submit') Delete
+        form(method='POST' action='')
+          div.form-group
+            input#categoryid.form-control(type='hidden',name='categoryid', required='true', value=category._id )
+
+          button.btn.btn-primary(type='submit') Delete

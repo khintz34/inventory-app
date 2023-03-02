@@ -183,12 +183,19 @@ body {
   display: flex;
   flex-direction: row;
   gap: 5vw;
+  width: 80vw;
 }
 
 .detail-right,
 .detail-left {
   margin-top: 0;
   width: 40vw;
+  border: 1px solid red;
+  padding: 2vh 2vw;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .total-count {
@@ -200,6 +207,7 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  margin-top: 2vh;
 }
 
 .button-container > button {
@@ -239,9 +247,6 @@ button > a:hover {
 .link-container > a:hover {
   color: red;
   text-decoration: none;
-  background-color: black;
-  border-radius: 20px;
-  padding: 1vh;
 }
 
 .detail-strong {
@@ -255,4 +260,44 @@ button > a:hover {
 .section-container {
   display: flex;
   flex-direction: column;
+}
+
+.form-group {
+  width: 60vw;
+  font-size: 3vh;
+}
+
+.form-main {
+  width: 60vw;
+  margin-top: 10vh;
+}
+
+.delete-message {
+  color: black;
+}
+
+/* ! Category Specific  */
+
+.link-container-category {
+  display: flex;
+  flex-direction: row;
+  gap: 1vw;
+}
+
+.link-container-category > a {
+  color: blue;
+}
+
+.link-container-category > a:hover {
+  text-decoration: none;
+  color: red;
+}
+
+.category-container {
+  list-style-type: circle;
+}
+
+.category-button {
+  justify-content: start;
+  gap: 2vw;
 }

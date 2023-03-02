@@ -1,27 +1,30 @@
 extends layout
 
 block content
-  h1 #{title}: #{item.name}
-  p= item.lifespan
+  div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  if item_instances.length > 0
+    div.detail-main    
+      h1 Delete Item: #{item.name}
+      p= item.lifespan
 
-    p #[strong Delete the following item instances before attempting to delete this item.]
+      if item_instances.length > 0
 
-    div(style='margin-left:20px;margin-top:20px')
+        p.delete-message Delete the following item instances before attempting to delete this item:
 
-      h4 Items
+        div(style='margin-left:20px;margin-top:20px')
 
-      dl
-      each item in item_instances
-        dt
-          a(href=item.url) #{item.item.name} (#{item.location.name})
+          dl
+          each item in item_instances
+            dt
+              a(href=item.url) #{item.item.name} (#{item.location.name})
 
-  else
-    p Do you really want to delete this item?
+      else
+        p.delete-message Do you really want to delete this item?
 
-    form(method='POST' action='')
-      div.form-group
-        input#itemid.form-control(type='hidden',name='itemid', required='true', value=item._id )
+        form(method='POST' action='')
+          div.form-group
+            input#itemid.form-control(type='hidden',name='itemid', required='true', value=item._id )
 
-      button.btn.btn-primary(type='submit') Delete
+          button.btn.btn-primary(type='submit') Delete

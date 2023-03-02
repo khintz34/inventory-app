@@ -2,14 +2,18 @@
 extends layout
 
 block content
+    div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  h1= title
+    div.detail-main
+      h1= title
 
-  ul
-    each category in category_list
-      li
-        a(href=category.url) #{category.name}
-        |  #{category.description}
+      ul.category-container
+        each category in category_list
+          li.link-container-category
+            a(href=category.url) #{category.name}
+            p #{category.description}
 
-    else
-      li There are no categories.
+        else
+          li There are no categories.

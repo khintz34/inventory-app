@@ -1,26 +1,30 @@
 extends layout
 
 block content
+    div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  h1 Category: #{title}
+    div.detail-main  
 
-  h3 #{category.description}
+      h1 Category: #{title}
 
-  div(style='margin-left:20px;margin-top:20px')
+      h3.delete-message #{category.description}
 
-    h4 Items
+      div(style='margin-left:20px;margin-top:20px')
 
-    dl
-      each cat in category_items
-        dt
-          a(href=cat.url) #{cat.name}
-        dd #{cat.description}
+        dl
+          each cat in category_items
+            dt
+              a(href=cat.url) #{cat.name}
+            dd #{cat.description}
 
-      else
-        p This Category has no items
+          else
+            p This Category has no items
 
-    hr
-    p
-      a(href=category.url+'/delete') Delete Category
-    p
-      a(href=category.url+'/update') Update Category
+        hr
+        div.button-container.category-button
+          button
+            a(href=category.url+'/delete') Delete Category
+          button
+            a(href=category.url+'/update') Update Category

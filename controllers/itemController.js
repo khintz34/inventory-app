@@ -231,7 +231,7 @@ exports.item_delete_post = (req, res, next) => {
         return next(err);
       }
       // Success
-      if (results.items_instances.length > 0) {
+      if (results.items_instances) {
         // item has items. Render in same way as for GET route.
         res.render("item_delete", {
           title: "Delete item",

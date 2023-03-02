@@ -198,7 +198,7 @@ exports.category_update_post = [
     .isLength({ min: 1, max: 30 })
     .escape()
     .withMessage("Category must be specified.")
-    .isAlphanumeric()
+    .isAlpha("en-US", { ignore: " " })
     .withMessage("Category has non-alphanumeric characters."),
   body("description")
     .trim()
