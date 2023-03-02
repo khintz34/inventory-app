@@ -1,27 +1,39 @@
 extends layout
 
 block content
-  h1 Item: #{title}
+  div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  p #[strong Category: ]
-     a(href=item.category.url) #{item.category.name}
-  p #[strong Description:] #{item.description}
-  p #[strong Price:] #{item.price}
+    div.detail-main.detail-split
+      div.detail-left 
+        div.section-container 
+          p.detail-strong #[strong Item: ] #{title}
+        div.section-container
+          p.link-container.detail-strong #[strong Category: ]
+            a(href=item.category.url) #{item.category.name}
+        div.section-container
+          p.detail-strong #[strong Description:] #{item.description}
+        div.section-container  
+          p.detail-strong #[strong Price:] $#{item.price}
+        div.button-container 
+          button
+              a(href=item.url+'/delete') Delete Item
+          button
+              a(href=item.url+'/update') Update Item
 
-  div(style='margin-left:20px;margin-top:20px')
-    h4 Available Inventory
-
-    each val in item_instances
+      div.detail-right
+        - var count = 0;
+          h4.detail-strong #[strong Available Inventory]
+            - item_instances.sort(function(a, b) {let textA = a.location.name.toUpperCase(); let textB = b.location.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});  
+          each val in item_instances
+            - count++
+            hr
+            a(href=val.url).link-container.location Location: #{val.location.name}
+          else
+            p This product is not in stock right now
+          hr  
+          p.total-count Total Count: #{count}
       hr
-      p #[strong Location: ]
-        a(href=val.url) #{val.location.name}
 
-    else
-      p This product is not in stock right now
-
-  hr
-  p
-    a(href=item.url+'/delete') Delete Item
-  p
-    a(href=item.url+'/update') Update Item
     

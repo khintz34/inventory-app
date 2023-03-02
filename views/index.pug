@@ -1,16 +1,26 @@
 extends layout
 
 block content
-  h1= title
+  div.home-title-holder
+    h1.home-title= title
 
-
-  if error
-    p Error getting dynamic content.
-  else
-    p Current Inventory:
-
-    ul
-      li #[strong Items:] !{data.item_count}
-      li #[strong Locations:] !{data.location_count}
-      li #[strong Categories:] !{data.category_count}
-      li #[strong Item Instances:] !{data.item_instance_count}
+  div.home-dashboard
+    div.dashboard-main
+      if error
+        p Error getting dynamic content.
+      else
+        p.current-title Current Inventory Status
+        div
+          ul.dashboard-ul
+            li.table-container  
+              a.dashboard-item(href='/catalog/items') Items: 
+              p !{data.item_count} 
+            li.table-container  
+              a.dashboard-item(href='/catalog/locations') Locations: 
+              p !{data.location_count}
+            li.table-container 
+              a.dashboard-item(href='/catalog/categories') Categories: 
+              p !{data.category_count}
+            li.table-container 
+              a.dashboard-item(href='/catalog/iteminstances') Item Instances: 
+              p !{data.item_instance_count}

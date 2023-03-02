@@ -1,13 +1,20 @@
 extends layout
 
 block content
-  h1= title
+  div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  ul
-    each item in item_list
-      li
-        a(href=item.url) #{item.name} 
-        | (#{item.category.name})
+    div.detail-main
+      ul
+        li.detail-table
+          p.table-header Item Name 
+          p.table-header Category Name
+        - item_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});  
+        each item in item_list
+          li.detail-table
+            a(href=item.url) #{item.name} 
+            a(href=item.category.url) #{item.category.name}
 
-    else
-      li There are no items.
+        else
+          li There are no items.

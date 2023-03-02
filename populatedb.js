@@ -6,12 +6,7 @@ console.log(
 
 // Get arguments passed on command line
 var userArgs = process.argv.slice(2);
-/*
-if (!userArgs[0].startsWith('mongodb')) {
-    console.log('ERROR: You need to specify a valid mongodb URL as the first argument');
-    return
-}
-*/
+
 var async = require("async");
 var Item = require("./models/item");
 var Category = require("./models/category");
@@ -32,7 +27,6 @@ const locations = [];
 const iteminstances = [];
 
 function itemCreate(name, description, category, price, cb) {
-  console.log(name, description, category, price);
   itemdetail = {
     name: name,
     description: description,
@@ -44,27 +38,22 @@ function itemCreate(name, description, category, price, cb) {
 
   item.save(function (err) {
     if (err) {
-      console.log(err);
       cb(err, null);
       return;
     }
-    console.log("New Item: " + item);
     items.push(item);
     cb(null, item);
   });
 }
 
 function locationCreate(name, cb) {
-  console.log("creating Location: " + name);
   location = new Location({ name: name });
 
   location.save(function (err) {
     if (err) {
-      console.log("error" + name);
       cb(err, null);
       return;
     }
-    console.log("New Location: " + location);
     locations.push(location);
     cb(null, location);
   });
@@ -82,7 +71,6 @@ function categoryCreate(name, description, cb) {
       cb(err, null);
       return;
     }
-    console.log("New Category: " + category);
     categories.push(category);
     cb(null, category);
   });
@@ -97,11 +85,9 @@ function itemInstanceCreate(item, location, cb) {
   const iteminstance = new ItemInstance(iteminstancedetail);
   iteminstance.save(function (err) {
     if (err) {
-      console.log("ERROR CREATING ItemInstance: " + iteminstance);
       cb(err, null);
       return;
     }
-    console.log("New ItemInstance: " + iteminstance);
     iteminstances.push(iteminstance);
     cb(null, Item);
   });
@@ -141,7 +127,6 @@ function createLocationsCategories(cb) {
 }
 
 function createItems(cb) {
-  console.log("createItems function");
   async.series(
     [
       function (callback) {

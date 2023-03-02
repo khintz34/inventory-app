@@ -23,7 +23,7 @@ exports.index = (req, res) => {
     },
     (err, results) => {
       res.render("index", {
-        title: "Local Library Home",
+        title: "Soccer Store Inventory Tracker",
         error: err,
         data: results,
       });
@@ -61,7 +61,6 @@ exports.item_detail = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
-        console.log(results);
         return next(err);
       }
       if (results.item == null) {
@@ -93,7 +92,6 @@ exports.item_create_get = (req, res, next) => {
       if (err) {
         return next(err);
       }
-      // console.log(results.categories);
       res.render("item_form", {
         title: "Create Item",
         categories: results.categories,
@@ -163,7 +161,6 @@ exports.item_create_post = [
               category.checked = "true";
             }
           }
-          console.log(results.categories);
           res.render("item_form", {
             title: "Create Item",
             categories: results.categories,
@@ -346,7 +343,6 @@ exports.item_update_post = [
           }
           // Mark our selected categories as checked.
           for (const category of results.categories) {
-            console.log(category);
             if (item.category.includes(category._id)) {
               category.checked = "true";
             }

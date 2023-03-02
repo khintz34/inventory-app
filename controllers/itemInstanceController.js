@@ -58,7 +58,6 @@ exports.iteminstance_create_get = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
-        console.log(results);
         return next(err);
       }
       if (results.item == null) {
@@ -219,7 +218,6 @@ exports.iteminstance_update_get = (req, res, next) => {
     },
     (err, results) => {
       if (err) {
-        console.log(results);
         return next(err);
       }
       if (results.item == null) {
@@ -232,13 +230,9 @@ exports.iteminstance_update_get = (req, res, next) => {
         let itemLocation = results.iteminstance.location;
         if (location._id.toString() === itemLocation._id.toString()) {
           location.checked = "true";
-          // console.log(itemLocation + "here");
         }
       }
       // Successful, so render.
-      // console.log(results.iteminstance);
-      console.log(results.iteminstance.location.name);
-      console.log(results.iteminstance.item.name);
       res.render("iteminstance_form", {
         title: "Update Item Instance",
         item_list: results.item,
@@ -264,7 +258,6 @@ exports.iteminstance_update_post = [
     // Extract the validation errors from a request.
     const errors = validationResult(req);
 
-    console.log(req.body.location);
     // Create a itemInstance object with escaped/trimmed data and current id.
     var iteminstance = new ItemInstance({
       item: req.body.item,
