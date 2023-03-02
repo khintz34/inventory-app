@@ -301,3 +301,17 @@ button > a:hover {
   justify-content: start;
   gap: 2vw;
 }
+
+/* ! Location Specific */
+
+.location-main {
+  /* margin-left: 5vw; */
+  border: 1px solid red;
+  width: 30vw;
+  padding: 2vw 4vw;
+  border-radius: 20px;
+}
+
+.location-list {
+  text
+}

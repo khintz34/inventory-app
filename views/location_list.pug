@@ -2,13 +2,19 @@
 extends layout
 
 block content
+  div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  h1= title
+    div.detail-main
+      div.location-main
 
-  ul
-    each location in location_list
-      li
-        a(href=location.url) #{location.name}
+        h2 Store Locations: 
 
-    else
-      li There are no Locations.
+        ol.location-list
+          each location in location_list
+            li
+              a(href=location.url) #{location.name}
+
+          else
+            li There are no Locations.

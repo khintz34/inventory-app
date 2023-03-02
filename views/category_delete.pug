@@ -7,21 +7,17 @@ block content
 
     div.detail-main  
       h1 #{title}: #{category.name}
-      p= category.lifespan
 
       if category_items.length > 0
 
-        p #[strong Delete the following item instances before attempting to delete this category.]
+        p.delete-message Delete the following items before attempting to delete this category.
 
         div(style='margin-left:20px;margin-top:20px')
 
-          h4 Items
-
           dl
           each item in category_items
-            dt
-              //- a(href=item.url) #{item.item.name} (#{item.item._id})
-              p #{item.name}
+            dt.link-container-category
+              a(href=item.url) #{item.name}
 
       else
         p Do you really want to delete this category?
