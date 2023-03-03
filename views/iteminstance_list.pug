@@ -1,13 +1,25 @@
 extends layout
 
 block content
-  h1= title
+  div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  ul
-    each val in iteminstance_list
-      li
-        a(href=val.url) #{val.item.name} : 
-        a (#{val.location.name})
+    div.detail-main
+      h2 Current Inventory
 
-    else
-      li There are no #{val.item.name} at this location. 
+      ul.no-bullet
+        li.detail-table.inventory-table
+          p.table-header Item Name 
+          p.table-header Location
+          p.table-header Inv Number
+        each val in iteminstance_list
+          li.detail-table.inventory-table
+            a(href=val.url) #{val.item.name}
+            a(href=val.location.url) #{val.location.name}
+            p.inventory-num #{val._id}
+
+        else
+          li There are no #{val.item.name} at this location. 
+
+          

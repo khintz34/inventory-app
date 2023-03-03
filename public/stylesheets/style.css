@@ -316,3 +316,24 @@ button > a:hover {
   background-color: white;
   color: var(--main-color);
 }
+
+/* ! Inventory Specific  */
+.no-bullet {
+  list-style-type: none;
+}
+
+.inventory-table {
+  grid-template-columns: 1fr 1fr 1.5fr;
+  width: 70vw;
+  margin-left: -8vw;
+}
+
+.inventory-table > p {
+  background-color: white;
+  color: var(--main-color);
+}
+
+.inventory-num {
+  background-color: white;
+  color: var(--main-color);
+}
