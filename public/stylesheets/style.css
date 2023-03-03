@@ -312,6 +312,7 @@ button > a:hover {
   border-radius: 20px;
 }
 
-.location-list {
-  text
+.detail-table > .location-price {
+  background-color: white;
+  color: var(--main-color);
 }

@@ -1,24 +1,34 @@
 extends layout
 
 block content
+  div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  h1 Location: #{title}
+    div.detail-main
 
-  div(style='margin-left:20px;margin-top:20px')
+      h2 Inventory Management for the <span class='delete-message'>#{title}</span> store:
 
-    h4 Items
+      div(style='margin-left:20px;margin-top:20px')
 
-    dl
-      each val in location_items
-        dt
-          a(href=val.url) #{val.item.name} -- $#{val.item.price}
-        dd #{val.description}
+        ul
+          li.detail-table
+            p.table-header Item Name 
+            p.table-header Price
+          - location_items.sort(function(a, b) {let textA = a.item.name.toUpperCase(); let textB = b.item.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});  
+          each val in location_items
+            li.detail-table
+              a(href=val.url) #{val.item.name} 
+              p.location-price $#{val.item.price}
 
-      else
-        p This Location has no items
+          else
+            p This Location has no items
 
-  hr
-  p
-    a(href=location.url+'/delete') Delete Location
-    p
-    a(href=location.url+'/update') Update Location
+      hr
+      div.button-container 
+        button
+          a(href=location.url+'/delete') Remove Store
+        button
+          a(href=location.url+'/update') Update Store Details
+        button
+          a(href='/catalog/iteminstance/create') Add Item to Store
