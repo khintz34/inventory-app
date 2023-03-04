@@ -13,6 +13,7 @@ block content
           p.table-header Item Name 
           p.table-header Location
           p.table-header Inv Number
+        - iteminstance_list.sort(function(a, b) {let textA = a.item.name.toUpperCase(); let textB = b.item.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});    
         each val in iteminstance_list
           li.detail-table.inventory-table
             a(href=val.url) #{val.item.name}

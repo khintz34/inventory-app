@@ -72,6 +72,7 @@ body {
   background-color: white;
   border-right: 2px solid #999;
   background-color: red;
+  min-width: 250px;
 }
 
 .sidebar-nav > li > a {
@@ -336,4 +337,24 @@ button > a:hover {
 .inventory-num {
   background-color: white;
   color: var(--main-color);
+}
+
+.inventory-option {
+  width: 30vw;
+}
+
+.inventory-form {
+  margin-top: 5vh;
+}
+
+.detail-main > .inventory-heading {
+  color: black;
+}
+
+.main-color {
+  color: var(--main-color);
+}
+
+.red-color {
+  color: red;
 }

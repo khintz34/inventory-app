@@ -15,7 +15,7 @@ exports.iteminstance_list = (req, res, next) => {
       }
       // Successful, so render
       res.render("iteminstance_list", {
-        title: "Item Instance List",
+        title: "Inventory List",
         iteminstance_list: list_iteminstances,
       });
     });
@@ -39,7 +39,7 @@ exports.iteminstance_detail = (req, res, next) => {
       }
       // Successful, so render
       res.render("iteminstance_detail", {
-        title: "Item Instance List",
+        title: "Inventory List",
         iteminstance: iteminstance,
       });
     });
@@ -68,7 +68,7 @@ exports.iteminstance_create_get = (req, res, next) => {
       }
       // Successful, so render.
       res.render("iteminstance_form", {
-        title: "Create Item Instance",
+        title: "Create Inventory Item",
         item_list: results.item,
         location_list: results.location,
       });
@@ -124,7 +124,7 @@ exports.iteminstance_create_post = [
             }
           }
           res.render("item_form", {
-            title: "Create ItemInstance",
+            title: "Create Inventory Item",
             locations: results.locations,
             iteminstance,
             errors: errors.array(),
@@ -167,7 +167,7 @@ exports.iteminstance_delete_get = (req, res, next) => {
       }
       // Successful, so render.
       res.render("iteminstance_delete", {
-        title: "Delete Item Instance",
+        title: "Delete Inventory Item",
         iteminstance: results.iteminstance,
       });
     }
@@ -234,7 +234,7 @@ exports.iteminstance_update_get = (req, res, next) => {
       }
       // Successful, so render.
       res.render("iteminstance_form", {
-        title: "Update Item Instance",
+        title: "Update Inventory Item",
         item_list: results.item,
         location_list: results.location,
         selected_location: results.iteminstance.location._id,
@@ -273,7 +273,7 @@ exports.iteminstance_update_post = [
         }
         // Successful, so render.
         res.render("iteminstance_form", {
-          title: "Update itemInstance",
+          title: "Update Inventory Item",
           item_list: items,
           selected_item: iteminstance.item._id,
           errors: errors.array(),

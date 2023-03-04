@@ -41,7 +41,10 @@ exports.item_list = (req, res, next) => {
         return next(err);
       }
       //Successful, so render
-      res.render("item_list", { title: "Item List", item_list: list_items });
+      res.render("item_list", {
+        title: "Item List",
+        item_list: list_items,
+      });
     });
 };
 

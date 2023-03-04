@@ -1,15 +1,20 @@
 extends layout
 
 block content
-  h1 #{title}: #{iteminstance._id}
+    div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  div(style='margin-left:20px;margin-top:20px')
-    h4 Item Instance Details:  
-    h3 Item: #{iteminstance.item.name}
-    h3 Location: #{iteminstance.location.name} 
-    
-    form(method='POST' action='')
-      div.form-group
-        input#iteminstanceid.form-control(type='hidden',name='iteminstanceid', required='true', value=iteminstance._id )
+    div.detail-main
+      h2.inventory-heading #{title}: <span class='main-color'>#{iteminstance._id}</span>
 
-      button.btn.btn-primary(type='submit') Delete
+      div(style='margin-left:20px;margin-top:20px')
+        h3.red-color Item Instance Details:  
+        h3.delete-message Item: <span class='main-color'>#{iteminstance.item.name}</span>
+        h3.delete-message Location: <span class='main-color'>#{iteminstance.location.name}</span>
+        
+        form(method='POST' action='')
+          div.form-group
+            input#iteminstanceid.form-control(type='hidden',name='iteminstanceid', required='true', value=iteminstance._id )
+
+          button.btn.btn-primary(type='submit') Delete

@@ -1,18 +1,24 @@
 extends layout
 
 block content
+  div.content-container
+    div.home-title-holder
+      h1.home-title Soccer Store Inventory App
 
-  h1  #{iteminstance.item.name}
-  h2  Store: #{iteminstance.location.name} 
-  h2  Price: #{iteminstance.item.price}
-  h2  Description: #{iteminstance.item.description}
-  h3  Product Id: #{iteminstance._id}
+    div.detail-main
 
-  div(style='margin-left:20px;margin-top:20px')
+      h2.inventory-heading  Item: <span class='main-color'>#{iteminstance.item.name}</span>
+      h2.inventory-heading  Store: <span class='main-color'>#{iteminstance.location.name}</span> 
+      h2.inventory-heading  Price: <span class='main-color'>$#{iteminstance.item.price}</span>
+      h2.inventory-heading  Description: <span class='main-color'>#{iteminstance.item.description}</span>
+      h3.inventory-heading  Inventory Number: <span class='main-color'>#{iteminstance._id}</span>
+
+      div(style='margin-left:20px;margin-top:20px')
 
 
-    hr
-    p
-      a(href=iteminstance.url+'/delete') Delete Instance
-    p
-      a(href=iteminstance.url+'/update') Update Instance
+        hr
+        div.button-container 
+          button
+              a(href=iteminstance.url+'/delete') Delete Inventory Item
+          button
+              a(href=iteminstance.url+'/update') Update Inventory Item
